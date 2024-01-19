@@ -35,8 +35,6 @@ namespace std {
             
             void listen_messages(U param) {
 
-                
-
                 while(true) {
 
                     unique_lock<mutex> lock(this->_mutex);

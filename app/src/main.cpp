@@ -40,14 +40,12 @@ void service_two_cb(string message, shared_ptr<Sender<string>> handler) {
 }
 
 void mainService(unique_ptr<Receiver<string, tuple<shared_ptr<Sender<string>>, shared_ptr<Sender<string>>>>> receiver, shared_ptr<Sender<string>> main_to_service_one_sender, shared_ptr<Sender<string>> main_to_service_two_sender) {
-    this_thread::sleep_for(chrono::milliseconds(100));
     cout << "Lauching Main Service Task..." << endl;
     receiver->register_callback(main_service_cb);
     receiver->listen_messages(make_tuple(main_to_service_one_sender, main_to_service_two_sender));
 }
 
 void serviceOne(unique_ptr<Receiver<string, shared_ptr<Sender<string>>>> receiver, shared_ptr<Sender<string>> service_one_to_main_sender) {
-    this_thread::sleep_for(chrono::milliseconds(200));
     cout << "Lauching Service One Task..." << endl;
     receiver->register_callback(service_one_cb);
     service_one_to_main_sender->send_message(MESSAGE_FROM_ONE_TO_MAIN);
@@ -55,7 +53,6 @@ void serviceOne(unique_ptr<Receiver<string, shared_ptr<Sender<string>>>> receive
 }
 
 void serviceTwo(unique_ptr<Receiver<string, shared_ptr<Sender<string>>>> receiver, shared_ptr<Sender<string>> service_two_to_main_sender) {
-    this_thread::sleep_for(chrono::milliseconds(300));
     cout << "Lauching Service Two Task..." << endl;
     receiver->register_callback(service_two_cb);
     service_two_to_main_sender->send_message(MESSAGE_FROM_TWO_TO_MAIN);
