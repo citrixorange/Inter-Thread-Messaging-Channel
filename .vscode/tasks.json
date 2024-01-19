@@ -1,0 +1,38 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build C++ ITMC App",
+            "type": "shell",
+            "command": "g++",
+            "args": [
+                "-std=c++20",
+                "-pthread",
+                "${workspaceFolder}/app/src/main.cpp",
+                "-I",
+                "${workspaceFolder}/lib/inc",
+                "-o",
+                "main"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "dependsOn": []
+        },
+        {
+            "label": "Transfer ITMC App Bin",
+            "type": "shell",
+            "command": "mv",
+            "args": [
+                "main.*",
+                "./bin"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "dependsOn": ["Build C++ ITMC App"]
+        }
+    ]
+}
