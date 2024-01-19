@@ -21,13 +21,13 @@ namespace std {
 
         private:
             string label;
-            mutex &_mutex;
+            mutex& _mutex;
             shared_ptr<queue<T>> channel;
             optional<shared_ptr<Callback<T,U>>> listener_callback;
 
         public:
             
-            Receiver(string label, shared_ptr<queue<T>> channel, mutex &_mutex) : label(label), _mutex(_mutex), channel(channel), listener_callback(nullopt) {}
+            Receiver(string label, shared_ptr<queue<T>> channel, mutex& _mutex) : label(label), _mutex(_mutex), channel(channel), listener_callback(nullopt) {}
 
             void register_callback(function<void(T,U)> callback) {
                 this->listener_callback = make_shared<Callback<T,U>>(Callback<T,U>{callback});
@@ -39,17 +39,11 @@ namespace std {
 
                 while(true) {
 
-
-                    cout << "Locking mutex from " << this->label << endl;
-
                     unique_lock<mutex> lock(this->_mutex);
 
                     auto queue = this->channel;
 
                     lock.unlock();
-
-                    cout << "Unlocking mutex from " << this->label << endl;
-
 
                     while(!queue->empty()) {
                         T message = queue->front();
@@ -59,7 +53,7 @@ namespace std {
                         if(this->listener_callback.has_value()) {
                             auto callback = this->listener_callback.value();
                             if (callback) {
-                                return callback->callback(message, param);
+                                callback->callback(message, param);
                             }
                         }
 
@@ -78,12 +72,12 @@ namespace std {
         private:
 
             string label;
-            mutex &_mutex;
+            mutex& _mutex;
             shared_ptr<queue<T>> channel;
 
         public:
 
-            Sender(string label, shared_ptr<queue<T>> channel, mutex &_mutex) : label(label), _mutex(_mutex), channel(channel) {}
+            Sender(string label, shared_ptr<queue<T>> channel, mutex& _mutex) : label(label), _mutex(_mutex), channel(channel) {}
 
             void send_message(T msg) {
                 unique_lock<mutex> lock(this->_mutex);
